@@ -40,6 +40,7 @@ Para executar o sistema basta executar o script Python a seguir:
 ~$ python app.py
 ```
 
+
 ### **Bibliotecas Utilizadas:**
 
 - [requirements.txt](src/requirements.txt): `pip install -r requirements.txt`
