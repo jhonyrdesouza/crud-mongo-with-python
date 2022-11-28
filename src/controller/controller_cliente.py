@@ -1,111 +1,108 @@
 import pandas as pd
+
 from model.clientes import Cliente
-from conexion.mongo_queries import MongoQueries
+from reports.relatorios import Relatorio
+from services.mongoQueries import MongoQueries
+from tabulate import tabulate
+
 
 class Controller_Cliente:
     def __init__(self):
-        self.mongo = MongoQueries()
-        
+        pass
+
     def inserir_cliente(self) -> Cliente:
-        # Cria uma nova conexão com o banco que permite alteração
-        self.mongo.connect()
+        mongo = MongoQueries()
+        mongo.connect()
+        relatorio = Relatorio()
 
-        # Solicita ao usuario o novo CPF
-        cpf = input("CPF (Novo): ")
+        relatorio.get_relatorio_clientes()
+        cpf = input("\nInsira o cpf do cliente: ")
+        if self.verifica_existencia_cliente(mongo, cpf):
+            nome = input("\nNome completo do cliente: ")
+            telefone = input('\nInsira o telefone do cliente: ')
+            email = input('\nInsira o e-mail do cliente: ')
 
-        if self.verifica_existencia_cliente(cpf):
-            # Solicita ao usuario o novo nome
-            nome = input("Nome (Novo): ")
-            # Insere e persiste o novo cliente
-            self.mongo.db["clientes"].insert_one({"cpf": cpf, "nome": nome})
-            # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_cliente = self.recupera_cliente(cpf)
-            # Cria um novo objeto Cliente
-            novo_cliente = Cliente(df_cliente.cpf.values[0], df_cliente.nome.values[0])
-            # Exibe os atributos do novo cliente
-            print(novo_cliente.to_string())
-            self.mongo.close()
-            # Retorna o objeto novo_cliente para utilização posterior, caso necessário
-            return novo_cliente
+            mongo.db["clientes"].insert_one(
+                {"cpf": cpf, "nome": nome, "telefone": telefone, "email": email})
+
+            query_result = mongo.db['clientes'].find({"cpf": cpf})
+            cliente = pd.DataFrame(list(query_result))
+
+            print(f"{cliente.nome.values[0]} cadastrado com sucesso!")
+            print(tabulate(cliente, headers='keys', tablefmt='psql'))
+
         else:
-            self.mongo.close()
-            print(f"O CPF {cpf} já está cadastrado.")
-            return None
+            print(f"Ops.. O CPF {cpf} já está cadastrado!")
 
     def atualizar_cliente(self) -> Cliente:
-        # Cria uma nova conexão com o banco que permite alteração
-        self.mongo.connect()
+        mongo = MongoQueries()
+        mongo.connect()
 
-        # Solicita ao usuário o código do cliente a ser alterado
         cpf = input("CPF do cliente que deseja alterar o nome: ")
 
-        # Verifica se o cliente existe na base de dados
-        if not self.verifica_existencia_cliente(cpf):
-            # Solicita a nova descrição do cliente
-            novo_nome = input("Nome (Novo): ")
-            # Atualiza o nome do cliente existente
-            self.mongo.db["clientes"].update_one({"cpf": f"{cpf}"}, {"$set": {"nome": novo_nome}})
-            # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_cliente = self.recupera_cliente(cpf)
-            # Cria um novo objeto cliente
-            cliente_atualizado = Cliente(df_cliente.cpf.values[0], df_cliente.nome.values[0])
-            # Exibe os atributos do novo cliente
-            print(cliente_atualizado.to_string())
-            self.mongo.close()
-            # Retorna o objeto cliente_atualizado para utilização posterior, caso necessário
-            return cliente_atualizado
+        if not self.verifica_existencia_cliente(mongo, cpf):
+            novo_nome = input("Nome: ")
+            mongo.db["clientes"].update_one(
+                {"cpf": f"{cpf}"}, {"$set": {"nome": novo_nome}})
+
+            query = mongo.db["clientes"].find({"cpf": cpf})
+            cliente = pd.DataFrame(list(query))
+
+            print(f"Atualizado para {cliente.nome.values[0]}!")
+            print(tabulate(cliente, headers='keys', tablefmt='psql'))
+
         else:
-            self.mongo.close()
-            print(f"O CPF {cpf} não existe.")
-            return None
+            mongo.close()
+            print(f"O cliente {cpf} não existe.")
 
     def excluir_cliente(self):
-        # Cria uma nova conexão com o banco que permite alteração
-        self.mongo.connect()
+        mongo = MongoQueries()
+        mongo.connect()
 
-        # Solicita ao usuário o CPF do Cliente a ser alterado
         cpf = input("CPF do Cliente que irá excluir: ")
+        if not self.verifica_existencia_cliente(mongo, cpf):
+            if self.verifica_se_existe_fatura(mongo, cpf):
 
-        # Verifica se o cliente existe na base de dados
-        if not self.verifica_existencia_cliente(cpf):            
-            # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_cliente = self.recupera_cliente(cpf)
-            # Revome o cliente da tabela
-            self.mongo.db["clientes"].delete_one({"cpf":f"{cpf}"})
-            # Cria um novo objeto Cliente para informar que foi removido
-            cliente_excluido = Cliente(df_cliente.cpf.values[0], df_cliente.nome.values[0])
-            self.mongo.close()
-            # Exibe os atributos do cliente excluído
-            print("Cliente Removido com Sucesso!")
-            print(cliente_excluido.to_string())
+                submit = str(input(
+                    "Tem certeza que quer excluir esse cliente?\n(Digite S para sim e N para não) "))
+                if submit.lower() == "s":
+
+                    query = mongo.db["clientes"].find({"cpf": cpf})
+
+                    cliente = pd.DataFrame(list(query))
+                    mongo.db["clientes"].delete_one({"cpf": f"{cpf}"})
+
+                    print(
+                        f"Cliente {cliente.nome.values[0]} excluido com sucesso!")
+                    print(tabulate(cliente, headers='keys', tablefmt='psql'))
+
+            else:
+                submit = str(input(
+                    "O cliente tem registro de faturas recorrentes!\nDigite s para excluir os registros e n para voltar ao menu principal."))
+                if submit.lower() == "s":
+
+                    query = mongo.db["clientes"].find({"cpf": cpf})
+                    cliente = pd.DataFrame(list(query))
+
+                    mongo.db["fatura"].delete_many({"cliente": cpf})
+                    mongo.db["clientes"].delete_one({"cpf": cpf})
+
+                    print("Cliente e faturas vinculadas removidos com sucesso!")
+                    print(tabulate(cliente, headers='keys', tablefmt='psql'))
         else:
-            self.mongo.close()
-            print(f"O CPF {cpf} não existe.")
+            mongo.close()
+            print(f"O CPF {cpf} não existe!")
 
-    def verifica_existencia_cliente(self, cpf:str=None, external:bool=False) -> bool:
-        if external:
-            # Cria uma nova conexão com o banco que permite alteração
-            self.mongo.connect()
+    def verifica_existencia_cliente(self, mongo: MongoQueries, cpf: int = None) -> bool:
+        query = mongo.db['clientes'].find({"cpf": cpf})
 
-        # Recupera os dados do novo cliente criado transformando em um DataFrame
-        df_cliente = pd.DataFrame(self.mongo.db["clientes"].find({"cpf":f"{cpf}"}, {"cpf": 1, "nome": 1, "_id": 0}))
+        cliente = pd.DataFrame(list(query))
+        print(cliente)
+        return cliente.empty
 
-        if external:
-            # Fecha a conexão com o Mongo
-            self.mongo.close()
+    def verifica_se_existe_fatura(self, mongo: MongoQueries, cpf: int = None) -> bool:
+        query = mongo.db["fatura"].find({"cpf": cpf})
 
-        return df_cliente.empty
-
-    def recupera_cliente(self, cpf:str=None, external:bool=False) -> pd.DataFrame:
-        if external:
-            # Cria uma nova conexão com o banco que permite alteração
-            self.mongo.connect()
-
-        # Recupera os dados do novo cliente criado transformando em um DataFrame
-        df_cliente = pd.DataFrame(list(self.mongo.db["clientes"].find({"cpf":f"{cpf}"}, {"cpf": 1, "nome": 1, "_id": 0})))
-        
-        if external:
-            # Fecha a conexão com o Mongo
-            self.mongo.close()
-
-        return df_cliente
+        fatura = pd.DataFrame(list(query))
+        print(fatura)
+        return fatura.empty
