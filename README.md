@@ -16,11 +16,17 @@ O projeto desenvovlido, consiste em um sistema de controle de sócios torcedores
 
 ## 🧲 **Diagrama relacional:**
 
-![alt text](image/image.png)
+![alt text](diagrams/image.png)
 
 ## ⚡ **Executando o projeto:**
 
 O projeto desenvido exige que as coleções existam, então basta executar o script Python a seguir para a criação das coleções e preenchimento de dados de exemplos:
+
+Instale as dependencias necessárias para a execução do projeto:
+
+```shell
+~$ pip install -r requirements.txt
+```
 
 ```shell
 ~$ python create_collections.py

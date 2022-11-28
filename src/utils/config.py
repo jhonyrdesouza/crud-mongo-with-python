@@ -19,6 +19,8 @@ MENU_ENTIDADES = """Entidades
 """
 
 # Consulta de contagem de registros por tabela:
+
+
 def query_count(collection_name):
     from services.mongoQueries import MongoQueries
     import pandas as pd
@@ -33,7 +35,7 @@ def query_count(collection_name):
     return df
 
 
-def clear_console(wait_time: int = 5):
+def clear_console(wait_time: int = 3):
     import os
     from time import sleep
     sleep(wait_time)

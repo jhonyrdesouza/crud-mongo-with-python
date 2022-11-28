@@ -97,12 +97,10 @@ class Controller_Cliente:
         query = mongo.db['clientes'].find({"cpf": cpf})
 
         cliente = pd.DataFrame(list(query))
-        print(cliente)
         return cliente.empty
 
     def verifica_se_existe_fatura(self, mongo: MongoQueries, cpf: int = None) -> bool:
         query = mongo.db["fatura"].find({"cpf": cpf})
 
         fatura = pd.DataFrame(list(query))
-        print(fatura)
         return fatura.empty
