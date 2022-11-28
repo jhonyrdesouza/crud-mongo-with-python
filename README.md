@@ -28,6 +28,8 @@ Instale as dependencias necessárias para a execução do projeto:
 ~$ pip install -r requirements.txt
 ```
 
+Execute o script a seguir para realizar a criação das collections:
+
 ```shell
 ~$ python create_collections.py
 ```
