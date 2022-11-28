@@ -17,10 +17,10 @@ class Controller_Fatura:
 
         relatorio.get_relatorio_fatura()
 
-        cpf = str(input("CPF do cliente para cadastro da fatura: "))
+        cpf = (input("CPF do cliente para cadastro da fatura: "))
         if self.verifica_existencia_cliente(mongo, cpf):
 
-            id = int(input("Insira o número da fatura: "))
+            id = (input("Insira o número da fatura: "))
             referencia = input('Referência: ')
             vencimento = input('Vencimento da fatura: ')
             valor = input('valor: ')
