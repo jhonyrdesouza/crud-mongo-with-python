@@ -16,7 +16,7 @@ O projeto desenvovlido, consiste em um sistema de controle de sócios torcedores
 
 ## 🧲 **Diagrama relacional:**
 
-![alt text](image/image_diagram_er.jpeg)
+![alt text](image/image.png)
 
 ## ⚡ **Executando o projeto:**
 
