@@ -49,7 +49,7 @@ class Controller_Fatura:
         mongo.connect()
 
         id = int(input("ID da fatura que irá alterar: "))
-        if not self.verifica_existencia_fatura(mongo, id):
+        if self.verifica_existencia_fatura(mongo, id):
 
             novo_cpf = int(input("Insira o novo CPF do cliente: "))
             mongo.db["fatura"].update_one(
@@ -59,7 +59,7 @@ class Controller_Fatura:
             fatura = pd.DataFrame(list(query))
 
             print(
-                f" Fatura de ID #{fatura.id.values[0]} atualizada com sucesso!")
+                f" Fatura de ID #{id} atualizada com sucesso!")
             print(tabulate(fatura, headers='keys', tablefmt='psql'))
             mongo.close()
 
