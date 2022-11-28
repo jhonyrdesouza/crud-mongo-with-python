@@ -61,7 +61,7 @@ class Controller_Cliente:
 
         cpf = input("CPF do Cliente que irá excluir: ")
         if not self.verifica_existencia_cliente(mongo, cpf):
-            if self.verifica_se_existe_fatura(mongo, cpf):
+            if not self.verifica_se_existe_fatura(mongo, cpf):
 
                 submit = str(input(
                     "Tem certeza que quer excluir esse cliente?\n(Digite S para sim e N para não) "))
