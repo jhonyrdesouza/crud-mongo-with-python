@@ -1,4 +1,4 @@
-# 🎯 **Sobre o projeto: Sistema de Controle de Sócios Torcedores do SC Brasil:**
+# 🎯 **Sobre o projeto: Sistema de Controle de Faturas**
 
 O projeto desenvovlido, consiste em um sistema de controle de sócios torcedores, sendo capaz de administrar a venda de planos para os sócios torcedores.
 
@@ -39,6 +39,7 @@ Para executar o sistema basta executar o script Python a seguir:
 ```shell
 ~$ python app.py
 ```
+
 
 ### **Bibliotecas Utilizadas:**
 
