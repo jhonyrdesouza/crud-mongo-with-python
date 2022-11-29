@@ -12,7 +12,7 @@ O projeto desenvovlido, consiste em um sistema de controle de sócios torcedores
 
 ## 🎬 **Vídeo do projeto:**
 
-- [Link para acesso](https://youtu.be/uo5DjPxPu6w);
+- [Link para acesso](https://www.youtube.com/watch?v=3_f3zZ_rMgk);
 
 ## 🧲 **Diagrama relacional:**
 
