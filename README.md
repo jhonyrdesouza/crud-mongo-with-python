@@ -1,24 +1,4 @@
-# 🎯 **Sobre o projeto: Sistema de Controle de Faturas**
-
-O projeto desenvovlido, consiste em um sistema de controle de sócios torcedores, sendo capaz de administrar a venda de planos para os sócios torcedores.
-
-## 👤 **Integrantes:**
-
-- [Cleverton dos Santos Liltk](github.com/1tsRetr0),
-- [Gustavo de Oliveira Christ](github.com/ChRxT09),
-- [Jhony Rodrigues de Souza](github.com/jhonyrdesouza),
-- [Lucio Ewald do Nascimento](github.com/lucioew28),
-- [Wellington da Silva Barbosa Junior](github.com/WellingtonWritesCode)
-
-## 🎬 **Vídeo do projeto:**
-
-- [Link para acesso](https://www.youtube.com/watch?v=3_f3zZ_rMgk);
-
-## 🧲 **Diagrama relacional:**
-
-![alt text](diagrams/image.png)
-
-## ⚡ **Executando o projeto:**
+# ⚡ **Executando o projeto:**
 
 O projeto desenvido exige que as coleções existam, então basta executar o script Python a seguir para a criação das coleções e preenchimento de dados de exemplos:
 
